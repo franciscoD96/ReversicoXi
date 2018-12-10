@@ -11,12 +11,11 @@ public class ReversicoXi {
 
     List<List<Celula>> campo;
     List<Coord> posJogaveis;
-    List<Boolean> direcoesAComer;
 
     //player 1 = branco;
     //player 2 = preto;
 
-    class Coord {
+    public class Coord {
         int x, y;
         public Coord(int x, int y) {
             this.x = x;
@@ -123,35 +122,31 @@ public class ReversicoXi {
 
     public void verificaDirecoesCardeais(int x, int y, String player, String enemy) {
 
-        //  NW  N  NE  \\        (-1,-1) (-1, 0) (-1, 1)
-        //   W      E  \\   ->   ( 0,-1) ( 0, 0) ( 0, 1)
-        //  SW  S  SE  \\        ( 1,-1) ( 1, 0) ( 1, 1)
+        //  NW  N  NE         (-1,-1) (-1, 0) (-1, 1)
+        //   W      E    ->   ( 0,-1) ( 0, 0) ( 0, 1)
+        //  SW  S  SE         ( 1,-1) ( 1, 0) ( 1, 1)
 
         boolean N = true, NE = true, E = true, SE = true,
                 S = true, SW = true, W = true, NW = true;
 
-        direcoesAComer = new ArrayList<Boolean>();
-        for(int i = 0; i < 8; i++)
-            direcoesAComer.add(true);
-
         try {
             for (int c = 1; c < 8; c++) {
-                if (direcoesAComer.get(0))
-                    direcoesAComer.set(0, verificaDirecao(x, y, 0, -c, player, enemy));
-                if (direcoesAComer.get(1))
-                    direcoesAComer.set(1, verificaDirecao(x, y, c, -c, player, enemy));
-                if (direcoesAComer.get(2))
-                    direcoesAComer.set(2, verificaDirecao(x, y, c, 0, player, enemy));
-                if (direcoesAComer.get(3))
-                    direcoesAComer.set(3, verificaDirecao(x, y, c, c, player, enemy));
-                if (direcoesAComer.get(4))
-                    direcoesAComer.set(4, verificaDirecao(x, y, 0, c, player, enemy));
-                if (direcoesAComer.get(5))
-                    direcoesAComer.set(5, verificaDirecao(x, y, -c, c, player, enemy));
-                if (direcoesAComer.get(6))
-                    direcoesAComer.set(6, verificaDirecao(x, y, -c, 0, player, enemy));
-                if (direcoesAComer.get(7))
-                    direcoesAComer.set(7, verificaDirecao(x, y, -c, -c, player, enemy));
+                if (N)
+                    N = verificaDirecao(x, y, 0, -c, player, enemy);
+                if (NE)
+                    NE = verificaDirecao(x, y, c, -c, player, enemy);
+                if (E)
+                    E = verificaDirecao(x, y, c, 0, player, enemy);
+                if (SE)
+                    SE = verificaDirecao(x, y, c, c, player, enemy);
+                if (S)
+                    S = verificaDirecao(x, y, 0, c, player, enemy);
+                if (SW)
+                    SW = verificaDirecao(x, y, -c, c, player, enemy);
+                if (W)
+                    W = verificaDirecao(x, y, -c, 0, player, enemy);
+                if (NW)
+                    NW = verificaDirecao(x, y, -c, -c, player, enemy);
             }
         } catch (Exception e)
         { e.printStackTrace(); }
@@ -180,53 +175,11 @@ public class ReversicoXi {
         }
     }
 
-    public boolean papa(String eu, String inimigo, int x, int y) {
-
-            String r = campo.get(y).get(x).getCelula();
-            if (r == inimigo)
-                if(eu == "Branco")  campo.get(y).get(x).setBranco();
-                else                campo.get(y).get(x).setPreto();
-            else
-            if (r == eu /* mais verificações ? */)
-                return false;
-
-        return true;
-    }
-
-    public void efetuarJogada(int jogador, int x, int y) {
-
-        String inimigo, eu;
-        if(jogador == 1){ eu = "Branco"; inimigo = "Preto";
-            campo.get(y).get(x).setBranco(); }
-        else { eu = "Preto"; inimigo = "Branco";
-            campo.get(y).get(x).setPreto(); }
 
 
-        verificaDirecoesCardeais(x, y, eu, inimigo); // obter os pontos cardinais para onde vai, e mudar cada peça até lá
-
-        for(int c = 1; c < 8; c++) {
-            if (direcoesAComer.get(0))
-                direcoesAComer.set(0, papa(eu, inimigo, x, y - c));
-            if (direcoesAComer.get(1))
-                direcoesAComer.set(1, papa(eu, inimigo, x + c, y - c));
-            if (direcoesAComer.get(2))
-                direcoesAComer.set(2, papa(eu, inimigo, x + c, y));
-            if (direcoesAComer.get(3))
-                direcoesAComer.set(3, papa(eu, inimigo, x + c, y + c));
-            if (direcoesAComer.get(4))
-                direcoesAComer.set(4, papa(eu, inimigo, x, y + c));
-            if (direcoesAComer.get(5))
-                direcoesAComer.set(5, papa(eu, inimigo, x - c, y + c));
-            if (direcoesAComer.get(6))
-                direcoesAComer.set(6, papa(eu, inimigo, x - c, y));
-            if (direcoesAComer.get(7))
-                direcoesAComer.set(7, papa(eu, inimigo, x - c, y - c));
-        }
+    // insert Fazer Jogada here.
 
 
-
-
-    }
 
     public ReversicoXi() {
         int size = 8 * 8;
@@ -243,6 +196,8 @@ public class ReversicoXi {
         insereNoCampo(3, 4, 2);
         insereNoCampo(4, 4, 1);
 
+
+
         Scanner sc = new Scanner(System.in);
         int jogador = 1;
         while(true) {
@@ -252,7 +207,7 @@ public class ReversicoXi {
 
             Collections.shuffle(posJogaveis);
             Coord jogada = posJogaveis.get(0);
-            efetuarJogada(jogador, jogada.getX(), jogada.getY());
+            //efetuarJogada(jogador, jogada.getX(), jogada.getY());
             System.out.println("" + jogada.getX() + jogada.getY());
 
             limpaMarcadoresJogaveis();
